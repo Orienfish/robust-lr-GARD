@@ -50,7 +50,7 @@ theta_GARD = GARD(X, y, n, m, eps_0);
 time = toc;
 fprintf('MSE of GARD: %f dB, time: %f s\n', MSE(theta_0, theta_GARD), time);
 
-% GARD under QR factorization
+% GARD with QR factorization
 tic;
 theta_GARD_QR = GARD_QR(X, y, n, m, eps_0);
 time = toc;

@@ -1,5 +1,5 @@
 function theta_GARD_QR = GARD_QR(X, y, n, m, eps_0)
-% GARD algorithm
+% GARD algorithm with QR factorization
 % Compute initial residual by projecting y onto R(X)
 k = 0;
 Aac = X;
