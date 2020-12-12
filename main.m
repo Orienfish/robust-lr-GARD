@@ -12,7 +12,7 @@ theta_sigma = 5;        % Standard deviation of the normal distribution for thet
 eps_0 = 3;              % Inlier noise bound
 outErr = 25;            % Outlier noise abs value
 
-% Generate random ground truth X and linear weights theta
+% Generate random observation X and linear weights theta
 X = repmat(X_min, n, m);
 X = X + rand(n, m) * (X_max - X_min);
 theta_0 = normrnd(theta_mean, theta_sigma, m, 1);
@@ -27,6 +27,39 @@ for i=1:s
     sign = -1 + 2 * (rand() > 0.5);
     u_0(rdn_idx(i)) = outErr * sign;
 end
-% Generate observation vector y
+% Generate final vector y
 y = X * theta_0 + u_0 + eta;
 
+% Least square
+P = inv(X'*X) * X'; % Projection matrix
+theta_LS = P * y;   % x* in least square
+fprintf('MSE of LS: %f\n', MSE(theta_0, theta_LS));
+
+% GARD
+% Compute initial residual by projecting y onto R(X)
+k = 0;
+Aac = X;
+In = eye(n);
+z_opt = inv(Aac'*Aac) * Aac' * y; % Initial opt. projection
+rk = y - Aac * z_opt;             % Initial residual
+% Start the loop until the residual is small enough
+jk_list = zeros(1, n);            % Record jk in each round
+norm_rk_list = zeros(1, n);         % Record norm(rk) in each round
+while norm(rk) > eps_0
+    k = k + 1;
+    [val, jk] = max(abs(rk));
+    jk_list(k) = jk;
+    Aac = [Aac, In(:, jk)];
+    z_opt = inv(Aac'*Aac) * Aac' * y;
+    rk = y - Aac * z_opt;
+    norm_rk_list(k) = norm(rk);
+end
+theta_GARD = z_opt(1:m);
+fprintf('MSE of GARD: %f\n', MSE(theta_0, theta_GARD));
+
+
+function err = MSE(v1, v2)
+% Calculate the mean square error between v1 and v2
+err = (v1 - v2)' * (v1 - v2);
+err = sum(err) / size(v1, 1);
+end
