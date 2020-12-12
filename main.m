@@ -1,15 +1,15 @@
 %% Initialization
 % Important parameters
 m = 50; % 100, 170      % Dimension of observations
-n = 100;                % Number of observations, n > m
-frac = 0.2;            % Outlier fraction
+n = 600;                % Number of observations, n > m
+frac = 0.4;            % Outlier fraction
 s = floor(n * frac);    % Number of outlier indexes
 
 X_min = -1;             % Min bound of X
 X_max = 1;              % Max bound of X
 theta_mean = 0;         % Mean of the normal distribution for theta
 theta_sigma = 5;        % Standard deviation of the normal distribution for theta
-eps_0 = 3;              % Inlier noise bound
+eps_0 = 20;              % Inlier noise bound
 outErr = 25;            % Outlier noise abs value
 
 % Generate random observation X and linear weights theta
@@ -36,8 +36,8 @@ theta_LS = P * y;   % x* in least square
 fprintf('MSE of LS: %f dB\n', MSE(theta_0, theta_LS));
 
 % MATLAB least square function regress
-theta_regress = regress(y, X);
-fprintf('MSE of regress: %f dB\n', MSE(theta_0, theta_regress));
+%theta_regress = regress(y, X);
+%fprintf('MSE of regress: %f dB\n', MSE(theta_0, theta_regress));
 
 % M-estimator
 theta_Mest = robustfit(X, y);
@@ -45,8 +45,16 @@ theta_Mest = theta_Mest(2:end); % Omit the const
 fprintf('MSE of M-estimator: %f dB\n', MSE(theta_0, theta_Mest));
 
 % GARD
+tic;
 theta_GARD = GARD(X, y, n, m, eps_0);
-fprintf('MSE of GARD: %f dB\n', MSE(theta_0, theta_GARD));
+time = toc;
+fprintf('MSE of GARD: %f dB, time: %f s\n', MSE(theta_0, theta_GARD), time);
+
+% GARD under QR factorization
+tic;
+theta_GARD_QR = GARD_QR(X, y, n, m, eps_0);
+time = toc;
+fprintf('MSE of GARD QR: %f dB, time: %f s\n', MSE(theta_0, theta_GARD_QR), time);
 
 function theta_GARD = GARD(X, y, n, m, eps_0)
 % GARD algorithm
