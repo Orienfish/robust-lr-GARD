@@ -2,7 +2,7 @@
 % Important parameters
 m = 50; % 100, 170      % Dimension of observations
 n = 100;                % Number of observations, n > m
-frac = 0.05;            % Outlier fraction
+frac = 0.2;            % Outlier fraction
 s = floor(n * frac);    % Number of outlier indexes
 
 X_min = -1;             % Min bound of X
@@ -33,11 +33,20 @@ y = X * theta_0 + u_0 + eta;
 % Least square
 P = inv(X'*X) * X'; % Projection matrix
 theta_LS = P * y;   % x* in least square
-fprintf('MSE of LS: %f\n', MSE(theta_0, theta_LS));
+fprintf('MSE of LS: %f dB\n', MSE(theta_0, theta_LS));
+
+% MATLAB least square function regress
+theta_regress = regress(y, X);
+fprintf('MSE of regress: %f dB\n', MSE(theta_0, theta_regress));
+
+% M-estimator
+theta_Mest = robustfit(X, y);
+theta_Mest = theta_Mest(2:end); % Omit the const
+fprintf('MSE of M-estimator: %f dB\n', MSE(theta_0, theta_Mest));
 
 % GARD
 theta_GARD = GARD(X, y, n, m, eps_0);
-fprintf('MSE of GARD: %f\n', MSE(theta_0, theta_GARD));
+fprintf('MSE of GARD: %f dB\n', MSE(theta_0, theta_GARD));
 
 function theta_GARD = GARD(X, y, n, m, eps_0)
 % GARD algorithm
@@ -49,7 +58,7 @@ z_opt = inv(Aac'*Aac) * Aac' * y; % Initial opt. projection
 rk = y - Aac * z_opt;             % Initial residual
 % Start the loop until the residual is small enough
 jk_list = zeros(1, n);            % Record jk in each round
-norm_rk_list = zeros(1, n);         % Record norm(rk) in each round
+norm_rk_list = zeros(1, n);       % Record norm(rk) in each round
 while norm(rk) > eps_0
     k = k + 1;
     [val, jk] = max(abs(rk));
@@ -63,8 +72,9 @@ theta_GARD = z_opt(1:m);
 end
 
 
-function err = MSE(v1, v2)
+function errlog = MSE(v1, v2)
 % Calculate the mean square error between v1 and v2
 err = (v1 - v2)' * (v1 - v2);
 err = sum(err) / size(v1, 1);
+errlog = 10 * log10(err);
 end
