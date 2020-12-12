@@ -36,6 +36,11 @@ theta_LS = P * y;   % x* in least square
 fprintf('MSE of LS: %f\n', MSE(theta_0, theta_LS));
 
 % GARD
+theta_GARD = GARD(X, y, n, m, eps_0);
+fprintf('MSE of GARD: %f\n', MSE(theta_0, theta_GARD));
+
+function theta_GARD = GARD(X, y, n, m, eps_0)
+% GARD algorithm
 % Compute initial residual by projecting y onto R(X)
 k = 0;
 Aac = X;
@@ -55,7 +60,7 @@ while norm(rk) > eps_0
     norm_rk_list(k) = norm(rk);
 end
 theta_GARD = z_opt(1:m);
-fprintf('MSE of GARD: %f\n', MSE(theta_0, theta_GARD));
+end
 
 
 function err = MSE(v1, v2)
