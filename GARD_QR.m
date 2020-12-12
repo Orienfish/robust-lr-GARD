@@ -15,10 +15,11 @@ while norm(rk) > eps_0
     k = k + 1;
     [val, jk] = max(abs(rk));
     jk_list(k) = jk;
-    uk = In(:, jk) - Qk * Qk' * In(:, jk);
+    newR = Qk' * In(:, jk);       % Avoid repeated computation of Qk' * In(:, jk)
+                                  % will speed up a lot
+    uk = In(:, jk) - Qk * newR;
     ek = uk / norm(uk);
-    Rk = [Rk, Qk' * In(:, jk); ...
-        zeros(1, m+k-1), norm(uk)];
+    Rk = [Rk, newR; zeros(1, m+k-1), norm(uk)];
     Qk = [Qk, ek];
     z_opt = backSubstitution(Rk, Qk' * y, m+k);
     Aac = [Aac, In(:, jk)];
