@@ -31,18 +31,22 @@ end
 y = X * theta_0 + u_0 + eta;
 
 % Least square
+tic;
 P = inv(X'*X) * X'; % Projection matrix
 theta_LS = P * y;   % x* in least square
-fprintf('MSE of LS: %f dB\n', MSE(theta_0, theta_LS));
+time = toc;
+fprintf('MSE of LS: %f dB, time: %f s\n', MSE(theta_0, theta_LS), time);
 
 % MATLAB least square function regress
 %theta_regress = regress(y, X);
 %fprintf('MSE of regress: %f dB\n', MSE(theta_0, theta_regress));
 
 % M-estimator
+tic;
 theta_Mest = robustfit(X, y);
 theta_Mest = theta_Mest(2:end); % Omit the const
-fprintf('MSE of M-estimator: %f dB\n', MSE(theta_0, theta_Mest));
+toc;
+fprintf('MSE of M-estimator: %f dB, time: %f s\n', MSE(theta_0, theta_Mest), time);
 
 % GARD
 tic;
