@@ -1,3 +1,7 @@
+clc;
+clear;
+close all;
+
 %% Initialization
 % Important parameters
 m_ = [50, 100, 170];    % Dimension of observations
@@ -13,7 +17,7 @@ eps_0 = 20;              % Inlier noise bound
 outErr = 25;            % Outlier noise abs value
 
 %% Exp 1: MSE of Least Square, M-est and GARD
-iter = 100;             % Number of iterations to repeat per setting
+iter = 1;             % Number of iterations to repeat per setting
 for i=1:numel(m_)
     m = m_(i);
     fprintf('Start testing m=%d\n', m);
@@ -75,12 +79,16 @@ for i=1:numel(m_)
     
     % Plot
     figure;
-    plot(frac_, MSE_LS, 'ro', 'DisplayName','Least Square'); hold on;
-    plot(frac_, MSE_Mest, 'g*', 'DisplayName','M-estimator'); hold on;
-    plot(frac_, MSE_GARD, 'bd', 'DisplayName','GARD');
-    legend;
-    xlabel('Outlier fraction %'); ylabel('10log10(MSE)');
-    title(sprintf('Total MSE comparison under m=%d', m));
+    plot(frac_, MSE_LS, 'ro-', 'LineWidth', 2, 'DisplayName','Least Square'); 
+    hold on;
+    plot(frac_, MSE_Mest, 'g*-', 'LineWidth', 2, 'DisplayName','M-estimator');
+    hold on;
+    plot(frac_, MSE_GARD, 'bd-', 'LineWidth', 2, 'DisplayName','GARD');
+    legend('Location', 'northwest', 'FontSize', 16);
+    xlabel('Outlier fraction %', 'FontSize', 16); xlim([0.05, 0.55]);
+    ylabel('10log10(MSE)', 'FontSize', 16);
+    ax = gca; ax.FontSize = 16;
+    title(sprintf('Total MSE comparison under m=%d', m), 'FontSize', 16);
 end
 
 % GARD
