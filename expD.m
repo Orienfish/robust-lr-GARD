@@ -46,8 +46,8 @@ function expD(p, iter)
             theta_Mest = theta_Mest(2:end); % Omit the const
             P_Mest_m = P_Mest_m + (norm(theta_0 - theta_Mest) <= norm(theta_0) * p.thres);
 
-            % GARD
-            theta_GARD = GARD(X, y, p.n, m, p.eps_0);
+            % GARD with QR acceleration
+            [theta_GARD, list] = GARD_QR(X, y, p.n, m, p.eps_0);
             P_GARD_m = P_GARD_m + (norm(theta_0 - theta_GARD) <= norm(theta_0) * p.thres);
         end
     P_LS(j) = P_LS_m / iter;

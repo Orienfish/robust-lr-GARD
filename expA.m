@@ -63,20 +63,20 @@ function expA(p, iter)
                 
                 % GARD
                 tic;
-                theta_GARD = GARD(X, y, p.n, m, p.eps_0);
+                [theta_GARD, list] = GARD(X, y, p.n, m, p.eps_0);
                 T_GARD_m = T_GARD_m + toc;
                 MSE_GARD_m = MSE_GARD_m + MSE(theta_0, theta_GARD);
                 % fprintf('MSE of GARD: %f dB\n', MSE(theta_0, theta_GARD));
 
                 % GARD with QR factorization
                 tic;
-                theta_GARD_QR = GARD_QR(X, y, p.n, m, p.eps_0);
+                GARD_QR(X, y, p.n, m, p.eps_0);
                 T_GARD_QR_m = T_GARD_QR_m + toc;
                 % fprintf('MSE of GARD QR: %f dB\n', MSE(theta_0, theta_GARD_QR));
                 
                  % GARD with Matrix Inversion Lemma
                 tic;
-                theta_GARD_MI = GARD_QR(X, y, p.n, m, p.eps_0);
+                GARD_QR(X, y, p.n, m, p.eps_0);
                 T_GARD_MI_m = T_GARD_MI_m + toc;
                 % fprintf('MSE of GARD MI: %f dB\n', MSE(theta_0, theta_GARD_MI));
             end

@@ -1,4 +1,4 @@
-function theta_GARD_MI = GARD_MI(X, y, n, m, eps_0)
+function [theta_GARD_MI, jk_list] = GARD_MI(X, y, n, m, eps_0)
 % GARD algorithm with block matrix inversion lemma
 % Compute initial residual by projecting y onto R(X)
 k = 0;
@@ -28,5 +28,6 @@ while norm(rk) > eps_0
     rk = y - Aac * z_opt;
     norm_rk_list(k) = norm(rk);
 end
-theta_GARD_MI = z_opt(1:m);
+theta_GARD_MI = z_opt(1:m);c
+jk_list = jk_list(1:k);
 end

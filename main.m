@@ -19,7 +19,15 @@ p.m_ = [50, 100, 170];    % Dimension of observation
 p.frac_ = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55];      
                           % Outlier fraction
 iter = 100;              % Number of iterations to repeat per setting
-%expA(p, iter);
+expA(p, iter);
+
+p.m = 100;                % Dimension of observation
+p.frac_ = [0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5];
+                          % Outlier fraction
+p.eps_0 = 28;
+p.outErr = 150;
+iter = 1000;
+expC(p, iter);
 
 % Reproduce exp V.D
 p.m = 100;                % Dimension of observation
