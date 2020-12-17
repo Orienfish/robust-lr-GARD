@@ -1,6 +1,5 @@
 %% Exp 1: MSE and execution time of Least Square, M-est and GARD (3 versions)
-function exp1(p)
-    iter = 1;             % Number of iterations to repeat per setting
+function exp1(p, iter)           
     for i=1:numel(p.m_)
         m = p.m_(i);
         fprintf('Start testing m=%d\n', m);
